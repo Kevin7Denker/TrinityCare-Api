@@ -1,11 +1,16 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards } from '@nestjs/common';
 import { DoctorService } from '../Services/doctor.service';
+import { Roles } from 'src/Common/Roles/Decorator/roles.decorator';
+import { RolesGuard } from 'src/Common/Roles/Guards/roles.guard';
+import { JwtAuthGuard } from 'src/Common/Auth/Guards/jwt.guard';
 
 @Controller('doctor')
 export class DoctorController {
   constructor(private readonly doctorService: DoctorService) {}
 
   @Post('register')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
   async registerDoctor(
     @Body()
     dto: {
