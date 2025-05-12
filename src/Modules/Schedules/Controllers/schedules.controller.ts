@@ -24,11 +24,14 @@ export class ScheduleController {
     return this.scheduleService.create(dto);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('doctor/:doctor_id')
   async findByDoctor(@Param('doctor_id') doctorId: string) {
     return this.scheduleService.findByDoctor(doctorId);
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Roles('admin', 'medico')
   @Delete(':id')
   async remove(@Param('id') id: string) {
     return this.scheduleService.delete(id);

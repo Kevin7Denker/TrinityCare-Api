@@ -86,4 +86,24 @@ export class AppointmentService {
     if (error) throw new Error(error.message);
     return { message: 'Agendamento removido com sucesso.' };
   }
+
+  async findByPatientId(patient_id: string) {
+    const { data, error } = await this.supabase
+      .from('Appointments')
+      .select('*')
+      .eq('patient_id', patient_id);
+
+    if (error) throw new Error(error.message);
+    return data;
+  }
+
+  async findByDoctorId(doctor_id: string) {
+    const { data, error } = await this.supabase
+      .from('Appointments')
+      .select('*')
+      .eq('doctor_id', doctor_id);
+
+    if (error) throw new Error(error.message);
+    return data;
+  }
 }
