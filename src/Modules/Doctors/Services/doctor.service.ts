@@ -104,6 +104,10 @@ export class DoctorService {
       })
       .eq('id', user.id);
 
+    console.log('rawToken', rawToken);
+    console.log('hashedToken', hashedToken);
+    console.log('expires', expires);
+
     await this.resendService.sendEmailVerification(user.email, rawToken);
 
     return {
