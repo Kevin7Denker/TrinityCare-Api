@@ -104,17 +104,11 @@ export class DoctorService {
       })
       .eq('id', user.id);
 
-    console.log('rawToken', rawToken);
-    console.log('hashedToken', hashedToken);
-    console.log('expires', expires);
-
     await this.resendService.sendEmailVerification(user.email, rawToken);
 
     return {
       message: 'Médico registrado. Verifique seu e-mail para ativar a conta.',
     };
-
-    return { message: 'Médico registrado com sucesso.' };
   }
 
   async login(dto: { email: string; password: string }) {
