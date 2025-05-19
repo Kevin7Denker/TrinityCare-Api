@@ -12,7 +12,6 @@ export class Doctor {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(() => User, (user) => user.doctors, { eager: true })
   @JoinColumn({ name: 'user_id' })
   user: User;
 

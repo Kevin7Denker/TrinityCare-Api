@@ -32,7 +32,4 @@ export class User {
 
   @Column({ type: 'timestamp', nullable: true })
   email_verification_expires: Date;
-
-  @OneToMany(() => Doctor, (doctor) => doctor.user)
-  doctors: Doctor[];
 }
