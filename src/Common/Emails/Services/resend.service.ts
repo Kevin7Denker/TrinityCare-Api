@@ -11,7 +11,7 @@ export class ResendService {
     const verifyUrl = `https://trinitycare.com/verify-email?token=${token}`;
 
     await this.resend.emails.send({
-      from: 'noreply@trinitycare.com',
+      from: 'noreply@kvdenker.com',
       to,
       subject: 'Verifique seu e-mail - TrinityCare',
       html: `
