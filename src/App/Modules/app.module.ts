@@ -9,10 +9,12 @@ import { AppointmentsModule } from 'src/Modules/Appointments/Modules/appointment
 import { SchedulesModule } from 'src/Modules/Schedules/Modules/schedules.module';
 import { ReceptionistsModule } from 'src/Modules/Receptionist/Modules/receptionist.module';
 import { PatientsModule } from 'src/Modules/Patient/Modules/patient.module';
+import { EmailModule } from 'src/Common/Emails/Modules/email.module';
 
 @Module({
   imports: [
     SupabaseModule,
+    EmailModule,
     AuthModule,
     AdminModule,
     DoctorsModule,
