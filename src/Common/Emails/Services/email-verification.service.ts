@@ -1,6 +1,6 @@
-import { Injectable, BadRequestException, Inject } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { SupabaseClient } from '@supabase/supabase-js';
-import * as bcrypt from 'bcrypt';
+import { Inject } from '@nestjs/common';
 
 @Injectable()
 export class EmailVerificationService {
@@ -9,26 +9,32 @@ export class EmailVerificationService {
   ) {}
 
   async verifyToken(token: string) {
-    const { data: users } = await this.supabase
-      .from('Users')
-      .select('*')
-      .gt('email_verification_expires', new Date());
+    if (!token) {
+      throw new BadRequestException('Token não fornecido.');
+    }
 
-    const user = users?.find((u) =>
-      bcrypt.compareSync(token, u.email_verification_token),
-    );
+    const { data, error } = await this.supabase
+      .from('EmailVerifications')
+      .select('user_id, expires_at')
+      .eq('token', token)
+      .single();
 
-    if (!user) throw new BadRequestException('Token inválido ou expirado.');
+    if (error || !data) {
+      throw new BadRequestException('Token inválido ou expirado.');
+    }
+
+    const now = new Date();
+    if (new Date(data.expires_at) < now) {
+      throw new BadRequestException('Token expirado.');
+    }
 
     await this.supabase
       .from('Users')
-      .update({
-        is_email_verified: true,
-        email_verification_token: null,
-        email_verification_expires: null,
-      })
-      .eq('id', user.id);
+      .update({ is_verified: true })
+      .eq('id', data.user_id);
 
-    return { message: 'E-mail verificado com sucesso.' };
+    await this.supabase.from('EmailVerifications').delete().eq('token', token);
+
+    return { message: 'E-mail verificado com sucesso!' };
   }
 }
