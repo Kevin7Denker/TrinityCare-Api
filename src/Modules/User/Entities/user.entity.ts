@@ -24,6 +24,12 @@ export class User {
   @Column()
   role: string;
 
-  @OneToMany(() => Doctor, (doctor) => doctor.user)
-  doctors: Doctor[];
+  @Column({ default: false })
+  is_email_verified: boolean;
+
+  @Column({ nullable: true })
+  email_verification_token: string;
+
+  @Column({ type: 'timestamp', nullable: true })
+  email_verification_expires: Date;
 }
