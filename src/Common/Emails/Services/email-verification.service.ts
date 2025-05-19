@@ -14,9 +14,11 @@ export class EmailVerificationService {
     }
 
     const { data, error } = await this.supabase
-      .from('EmailVerifications')
-      .select('user_id, expires_at')
-      .eq('token', token)
+      .from('Users')
+      .select(
+        'id, email_verification_token, email_verification_expires, is_email_verified',
+      )
+      .eq('email_verification_token', token)
       .single();
 
     if (error || !data) {
@@ -24,16 +26,18 @@ export class EmailVerificationService {
     }
 
     const now = new Date();
-    if (new Date(data.expires_at) < now) {
+    if (new Date(data.email_verification_expires) < now) {
       throw new BadRequestException('Token expirado.');
     }
 
     await this.supabase
       .from('Users')
-      .update({ is_verified: true })
-      .eq('id', data.user_id);
-
-    await this.supabase.from('EmailVerifications').delete().eq('token', token);
+      .update({
+        is_email_verified: true,
+        email_verification_token: null,
+        email_verification_expires: null,
+      })
+      .eq('id', data.id);
 
     return { message: 'E-mail verificado com sucesso!' };
   }
