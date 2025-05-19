@@ -8,7 +8,7 @@ export class ResendService {
   private resend = new Resend(process.env.RESEND_API_KEY);
 
   async sendEmailVerification(to: string, token: string) {
-    const verifyUrl = `https://trinitycare-api.kvdenker.com/verify-email?token=${token}`;
+    const verifyUrl = `https://trinitycare-api.kvdenker.com/auth/verify-email?token=${token}`;
 
     await this.resend.emails.send({
       from: 'noreply@kvdenker.com',
